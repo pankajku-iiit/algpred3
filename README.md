@@ -41,8 +41,8 @@ pip install pandas joblib
 
 ## Model File
 
-Ensure the trained model file is present in the same directory as the script:
-
+MOdel file will be atomatically downloaded from the website of AlgPred 3.0. Model can be manually downloaded from 
+https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav
 ```
 algpred3_model.sav
 ```
