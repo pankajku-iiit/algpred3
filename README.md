@@ -1,7 +1,7 @@
 # AlgPred 3.0
 
 ## Overview
-AlgPred 3.0 is a standalone command-line tool for the **prediction, scanning, and design of allergenic and non-allergenic proteins/peptides** from their primary amino acid sequences. The tool is developed by the **Raghava Group**, Department of Computational Biology, **Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)**.
+AlgPred 3.0 is a standalone command-line tool for the **prediction, scanning, and design of allergenic and non-allergenic peptides** from their primary amino acid sequences. The tool is developed by the **Raghava Group**, Department of Computational Biology, **Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)**.
 
 AlgPred 3.0 supports three major functionalities:
 
@@ -41,7 +41,7 @@ pip install pandas joblib
 
 ## Model File
 
-MOdel file will be atomatically downloaded from the website of AlgPred 3.0. Model can be manually downloaded from 
+Model file will be automatically downloaded from the website of AlgPred 3.0. It can be manually downloaded from 
 https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav
 ```
 algpred3_model.sav
