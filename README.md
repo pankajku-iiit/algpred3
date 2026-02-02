@@ -15,12 +15,13 @@ AlgPred 3.0 supports three major functionalities:
 
 - Accepts FASTA or plain-text sequence input
 - Automatic sequence cleaning and validation
+- Automatically download the required model
 - Dipeptide Composition (DPC) based feature extraction
 - Machine-learning-based probability prediction
 - Sliding window allergen mapping (Protein Scan)
 - Exhaustive single-point mutant generation (Design mode)
 - CSV outputs suitable for web-server integration
-- Compatible with PHP/HTML visualization pipelines
+
 
 ---
 
@@ -41,13 +42,13 @@ pip install pandas joblib
 
 ## Model File
 
-Model file will be automatically downloaded from the website of AlgPred 3.0. It can be manually downloaded from 
+The model file will be automatically downloaded from the AlgPred 3.0 website. It can be manually downloaded from 
 https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav
 ```
 algpred3_model.sav
 ```
 
-The program will terminate if the model file is missing.
+The program will automatically download the model if the model file is missing.
 
 ---
 
@@ -95,7 +96,7 @@ python algpred3.py -i input.fasta -j JOBTYPE [options]
 
 ### 1. Prediction Mode (`pred`)
 
-Predict allergenicity of full-length sequences.
+Predict allergenicity of full-length peptide sequences.
 
 ```bash
 python3 algpred3.py -i input.fasta -j pred -o pred_output.csv
@@ -179,9 +180,6 @@ If you use AlgPred 3.0 in your research, please cite:
 > **AlgPred 3.0**  
 > Raghava Group, Department of Computational Biology  
 > Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)
-
-(Please update this section with journal reference and DOI when published.)
-
 ---
 
 ## License
@@ -202,7 +200,7 @@ Website: https://webs.iiitd.edu.in/raghava/
 
 ## Acknowledgements
 
-We acknowledge the developers and users of AlgPred series for continuous feedback and improvements.
+We acknowledge the developers and users of the AlgPred series for continuous feedback and improvements.
 
 ---
 
