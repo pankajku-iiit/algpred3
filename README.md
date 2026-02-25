@@ -1,208 +1,217 @@
-# AlgPred 3.0
+AlgPred 3.0: Allergenicity Prediction & Peptide Design Suite
+
+AlgPred 3.0 is a comprehensive toolkit for predicting allergenic and non-allergenic peptides using machine learning models and sequence-derived descriptors. It integrates automated feature extraction, prediction, protein scanning, and mutation design workflows in a unified framework.
+
+It supports:
+
+Standalone allergenicity prediction
+Protein region scanning (sliding window analysis)
+Exhaustive single mutation design analysis
+
+The toolkit is optimized for Linux/macOS environments and supports reproducible command-line execution.
+
+---
 
 ## Overview
-AlgPred 3.0 is a standalone command-line tool for the **prediction, scanning, and design of allergenic and non-allergenic peptides** from their primary amino acid sequences. The tool is developed by the **Raghava Group**, Department of Computational Biology, **Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)**.
 
-AlgPred 3.0 supports three major functionalities:
+AlgPred 3.0 predicts allergenic potential of peptide or protein sequences using:
 
-- **Prediction (pred):** Classify full-length protein/peptide sequences as allergen or non-allergen.
-- **Protein Scan (scan):** Sliding-window scanning of proteins to identify allergenic regions.
-- **Design (des):** Systematic single-point mutation analysis to design reduced-allergenicity variants.
+Machine learning classifier trained on curated allergen datasets
+Sequence descriptors generated via the **pfeature_comp** feature engine
 
----
+It provides three workflows:
 
-## Features
-
-- Accepts FASTA or plain-text sequence input
-- Automatic sequence cleaning and validation
-- Automatically download the required model
-- Dipeptide Composition (DPC) based feature extraction
-- Machine-learning-based probability prediction
-- Sliding window allergen mapping (Protein Scan)
-- Exhaustive single-point mutant generation (Design mode)
-- CSV outputs suitable for web-server integration
-
+Prediction Mode — Predict allergenicity of peptides/proteins
+Scan Mode — Identify allergenic regions in proteins
+Design Mode — Generate and evaluate single mutants
 
 ---
 
-## Requirements
+## Core Functionalities
 
-- Python 3.7 or higher
-- Required Python libraries:
-  - pandas
-  - joblib
+Allergenicity prediction from sequences
+Automatic FASTA cleaning and validation
+Sequence descriptor calculation via pfeature
+Protein allergenicity scanning
+Single mutation design analysis
+Automated model download if absent
 
-Install dependencies using:
+---
+
+## Installation
+
+### Option 1 — Conda Environment (Recommended)
 
 ```bash
-pip install pandas joblib
+conda create -n algpred3 python=3.10
+conda activate algpred3
+conda install pandas joblib scikit-learn
 ```
 
----
-
-## Model File
-
-The model file will be automatically downloaded from the AlgPred 3.0 website. It can be manually downloaded from 
-https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav
-```
-algpred3_model.sav
-```
-
-The program will automatically download the model if the model file is missing.
-
----
-
-## Input Format
-
-### FASTA format
-
-```text
->seq1
-MAVPQNRVTRSRRNMRRAHDALVAANPASCPNCGELKRPHHVCGACGHYDDREVVAQAAEVDLDDDAA
->seq2
-MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQLR
-```
-
-### Plain text format
-
-```text
-MAVPQNRVTRSRRNMRRAHDALVAANPASCPNCGELKRP
-MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQLR
-```
-
-Invalid characters (non-standard amino acids) are automatically removed and logged.
-
----
-
-## Usage
+Clone repository:
 
 ```bash
-python algpred3.py -i input.fasta -j JOBTYPE [options]
+git clone https://github.com/raghavagps/algpred3.git
+cd algpred3
 ```
 
-### Common arguments
-
-| Argument | Description |
-|--------|-------------|
-| `-i, --input` | Input FASTA or plain text file |
-| `-o, --output` | Output CSV file (default: final_predictions.csv) |
-| `-j, --job` | Job type: pred, map, or des |
-| `-t, --threshold` | Prediction threshold (default: 0.5) |
-| `-wd, --working_directory` | Working directory |
-
----
-
-## Job Modes
-
-### 1. Prediction Mode (`pred`)
-
-Predict allergenicity of full-length peptide sequences.
+Download feature extraction binary:
 
 ```bash
-python3 algpred3.py -i input.fasta -j pred -o pred_output.csv
+wget <pfeature_release_link>
+chmod +x pfeature_comp
 ```
-
-**Output columns:**
-- Sequence_ID
-- Probability
-- Status (Allergen / Non-Allergen)
 
 ---
 
-### 2. Protein Scan Mode (`scan)
+### Option 2 — Manual Installation
 
-Performs sliding-window allergen scanning across protein sequences.
+Install dependencies:
 
 ```bash
-python3 algpred3.py -i input.fasta -j scan -l 10 -s 1 -o scan_output.csv
+pip install pandas joblib scikit-learn
 ```
 
-**Required arguments:**
-- `-l, --length` : Sliding window length
+Ensure:
 
-**Optional:**
-- `-s, --step` : Step size (default: 1)
-
-**Output columns:**
-- ParentSeq
-- Start
-- End
-- Peptide
-- Score
-- Prediction
-
-This output is designed for downstream residue-level mapping and visualization.
+* `pfeature_comp` executable is present
+* `columns.csv` file exists
+* Internet access for automatic model download
 
 ---
 
-### 3. Design Mode (`des`)
+## Usage Overview
 
-Generates all possible single-point mutants and predicts allergenicity.
+General syntax:
 
 ```bash
-python3 algpred3.py -i input.fasta -j des -o design_output.csv
+python algpred3.py -i input.fasta -j <mode> -o output.csv
 ```
 
-**Output columns:**
-- SeqID
-- MutantID
-- Sequence
-- Score
-- Prediction
+Modes available:
 
-Design mode can generate very large outputs for long sequences.
+* `pred` → Prediction mode
+* `scan` → Protein scanning
+* `des` → Mutation design
 
 ---
 
-## Logs
+## Prediction Mode
 
-- Invalid sequences and removed residues are logged to:
+Predict allergenicity of sequences.
 
+```bash
+python algpred3.py -i peptides.fasta -j pred -o output.csv
 ```
-stand_error.log
-```
+
+### Output Columns
+
+Sequence_ID — Sequence identifier
+Probability — Prediction score
+Status — Allergen / Non-Allergen
 
 ---
 
-## Output Files
+## Scan Mode
 
-- Cleaned FASTA: `*_clean.fasta`
-- Feature files: `*_DPC.csv`
-- Scan windows FASTA: `scan_windows.fasta`
-- Final prediction CSVs as specified by `-o`
+Sliding window allergenicity analysis across proteins.
+
+```bash
+python algpred3.py -i protein.fasta -j scan -l 15 -s 1 -o scan.csv
+```
+
+Arguments:
+
+-l → Window length (required)
+-s → Step size (default: 1)
+
+### Output Columns
+
+ParentSeq — Protein ID
+Start / End — Window positions
+Peptide — Extracted fragment
+Score — Prediction probability
+Prediction — Allergen / Non-Allergen
+
+---
+
+## Design Mode
+
+Generates all possible single amino acid mutants and evaluates allergenicity.
+
+```bash
+python algpred3.py -i peptides.fasta -j des -o design.csv
+```
+
+### Output Columns
+
+SeqID — Original sequence ID
+MutantID — Mutation annotation
+Sequence — Mutant sequence
+Score — Prediction probability
+Prediction — Allergen / Non-Allergen
+
+---
+
+## Sequence Validation
+
+Only standard amino acids allowed:
+
+ACDEFGHIKLMNPQRSTVWY
+
+Invalid sequences are:
+
+Automatically removed
+Logged in `stand_error.log`
+
+Clean FASTA files are generated before analysis.
+
+---
+
+## Machine Learning Model
+
+Model type:
+Classification model (serialized Joblib format)
+
+Feature source:
+pfeature sequence descriptors
+
+Model file:
+
+`algpred3_model.sav`
+Downloaded automatically if missing.
+
+---
+
+## Repository Contents
+
+algpred3.py — Main unified script
+algpred3_model.sav — Pretrained model (auto-download)
+pfeature_comp — Descriptor generator binary
+columns.csv — Selected feature columns
+README.md — Documentation
 
 ---
 
 ## Citation
 
-If you use AlgPred 3.0 in your research, please cite:
+If you use AlgPred 3.0 in research, please cite the corresponding publication from:
 
-> **AlgPred 3.0**  
-> Raghava Group, Department of Computational Biology  
-> Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)
+Raghava GPS Group, IIIT-Delhi.
+
+---
+
+## Support
+
+GitHub:
+https://github.com/raghavagps/algpred3
+
+Email:
+raghava@iiitd.ac.in
+
 ---
 
 ## License
 
-This software is intended for **academic and research use**. Redistribution or commercial use requires permission from the authors.
-
----
-
-## Contact
-
-**Raghava Group**  
-Department of Computational Biology  
-IIIT-Delhi, India
-
-Website: https://webs.iiitd.edu.in/raghava/
-
----
-
-## Acknowledgements
-
-We acknowledge the developers and users of the AlgPred series for continuous feedback and improvements.
-
----
-
-Thank you for using **AlgPred 3.0**.
-
+Academic and research use recommended.
+Refer to the repository license file for details.
