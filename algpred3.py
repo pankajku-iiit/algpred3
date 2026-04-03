@@ -21,15 +21,19 @@ warnings.filterwarnings("ignore")
 
 # ===================== PATHS & CONSTANTS =====================
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_MODEL_PATH = "algpred3_model.sav"
-PFEATURE_BIN = "./pfeature_comp"
+
+DEFAULT_MODEL_PATH = os.path.join(SCRIPT_DIR, "algpred3_model.sav")
+PFEATURE_BIN = os.path.join(SCRIPT_DIR, "pfeature_comp")
 COLUMNS_FILE = os.path.join(SCRIPT_DIR, "columns.csv")
+
+MODEL_URL = "https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav"
+PFEATURE_URL = "https://github.com/pankajku-iiit/algpred3/releases/download/v3.0.0/pfeature_comp"
+COLUMNS_URL = "https://github.com/pankajku-iiit/algpred3/releases/download/v3.0.0/columns.csv"
 
 AA_LIST = list("ACDEFGHIKLMNPQRSTVWY")
 VALID_AAS = set(AA_LIST)
 LOG_FILE = "stand_error.log"
-MODEL_URL = "https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav"
-
+MODEL_URL
 
 # ===================== ARGUMENT PARSER =====================
 def parse_args():
@@ -49,9 +53,30 @@ def parse_args():
                         help="Window length (scan mode)")
     parser.add_argument("-s", "--step", type=int, default=1)
 
-    parser.add_argument("-wd", "--working_directory", default=None)
-
     return parser.parse_args()
+
+
+# ===================== AUTO DOWNLOAD =====================
+def download_file(url, path, make_executable=False):
+    print(f"⬇ Downloading {os.path.basename(path)}...")
+    try:
+        urllib.request.urlretrieve(url, path)
+        if make_executable:
+            os.chmod(path, 0o755)
+        print(f"✅ {os.path.basename(path)} ready")
+    except Exception as e:
+        sys.exit(f"❌ Failed to download {path}: {e}")
+
+
+def setup_dependencies():
+    if not os.path.exists(PFEATURE_BIN):
+        download_file(PFEATURE_URL, PFEATURE_BIN, make_executable=True)
+
+    if not os.path.exists(COLUMNS_FILE):
+        download_file(COLUMNS_URL, COLUMNS_FILE)
+
+    if not os.path.exists(DEFAULT_MODEL_PATH):
+        download_file(MODEL_URL, DEFAULT_MODEL_PATH)
 
 
 # ===================== FASTA UTILITIES =====================
@@ -178,14 +203,6 @@ def extract_features(input_fasta):
 
 # ===================== MODEL =====================
 def load_model():
-    if not os.path.exists(DEFAULT_MODEL_PATH):
-        print("⬇ Downloading model...")
-        try:
-            urllib.request.urlretrieve(MODEL_URL, DEFAULT_MODEL_PATH)
-            print("✅ Model downloaded")
-        except Exception as e:
-            sys.exit(f"❌ Model download failed: {e}")
-
     print("📦 Loading trained model...")
     return joblib.load(DEFAULT_MODEL_PATH)
 
@@ -283,7 +300,7 @@ def run_des(cleaned_fasta, model, threshold, output):
         for i, aa in enumerate(seq):
             for m in AA_LIST:
                 if m != aa:
-                    mutants.append((name, f"mut{i+1}{aa}>{m}",
+                    mutants.append((name, f"mut{i+1}{aa}-{m}",
                                     seq[:i] + m + seq[i+1:]))
 
     print(f"🧪 Generated {len(mutants)} mutants")
@@ -316,9 +333,11 @@ def main():
     print("##############################################################################")
 
     args = parse_args()
-    os.chdir(args.working_directory or SCRIPT_DIR)
 
     open(LOG_FILE, "w").close()
+
+    # 🔥 AUTO SETUP
+    setup_dependencies()
 
     cleaned = clean_fasta(args.input)
     if not cleaned:
