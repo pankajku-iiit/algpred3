@@ -26,7 +26,7 @@ DEFAULT_MODEL_PATH = os.path.join(SCRIPT_DIR, "algpred3_model.sav")
 PFEATURE_BIN = os.path.join(SCRIPT_DIR, "pfeature_comp")
 COLUMNS_FILE = os.path.join(SCRIPT_DIR, "columns.csv")
 
-MODEL_URL = "https://webs.iiitd.edu.in/raghava/algpred3/algpred3_model.sav"
+MODEL_URL = "https://github.com/pankajku-iiit/algpred3/releases/download/v3.0.0/algpred3_model.sav"
 PFEATURE_URL = "https://github.com/pankajku-iiit/algpred3/releases/download/v3.0.0/pfeature_comp"
 COLUMNS_URL = "https://github.com/pankajku-iiit/algpred3/releases/download/v3.0.0/columns.csv"
 
