@@ -1,217 +1,200 @@
-AlgPred 3.0: Allergenicity Prediction & Peptide Design Suite
+# 🧬 AlgPred 3.0
 
-AlgPred 3.0 is a comprehensive toolkit for predicting allergenic and non-allergenic peptides using machine learning models and sequence-derived descriptors. It integrates automated feature extraction, prediction, protein scanning, and mutation design workflows in a unified framework.
-
-It supports:
-
-Standalone allergenicity prediction
-Protein region scanning (sliding window analysis)
-Exhaustive single mutation design analysis
-
-The toolkit is optimized for Linux/macOS environments and supports reproducible command-line execution.
+**Prediction of Allergenic and Non-Allergenic Peptides**
+Developed by Raghava Group, IIIT-Delhi
 
 ---
 
-## Overview
+## 📌 Overview
 
-AlgPred 3.0 predicts allergenic potential of peptide or protein sequences using:
+AlgPred 3.0 is a command-line tool for predicting whether peptide sequences are **allergenic or non-allergenic** using a trained machine learning model.
 
-Machine learning classifier trained on curated allergen datasets
-Sequence descriptors generated via the **pfeature_comp** feature engine
+It supports three major modes:
 
-It provides three workflows:
-
-Prediction Mode — Predict allergenicity of peptides/proteins
-Scan Mode — Identify allergenic regions in proteins
-Design Mode — Generate and evaluate single mutants
+* 🔍 **Prediction (`pred`)** – Classify full sequences
+* 🧬 **Scan (`scan`)** – Sliding window analysis of proteins
+* 🧪 **Design (`des`)** – Generate and evaluate mutants
 
 ---
 
-## Core Functionalities
+## ⚙️ Features
 
-Allergenicity prediction from sequences
-Automatic FASTA cleaning and validation
-Sequence descriptor calculation via pfeature
-Protein allergenicity scanning
-Single mutation design analysis
-Automated model download if absent
+* Automatic dependency download (model + binaries)
+* FASTA & plain text input support
+* Built-in sequence cleaning and validation
+* Multiple feature extraction techniques:
+
+  * AAC, DPC, BTC, DDR
+  * PAAC, APAAC, CeTD
+* Adjustable prediction threshold
+* CSV output for easy analysis
 
 ---
 
-## Installation
+## 📂 Project Structure
 
-### Option 1 — Conda Environment (Recommended)
-
-```bash
-conda create -n algpred3 python=3.10
-conda activate algpred3
-conda install pandas joblib scikit-learn
+```
+.
+├── algpred3.py
+├── algpred3_model.sav      # Auto-downloaded
+├── pfeature_comp           # Auto-downloaded
+├── columns.csv             # Auto-downloaded
+├── stand_error.log         # Invalid sequences log
+└── output files (.csv)
 ```
 
-Clone repository:
+---
+
+## 🚀 Installation
+
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/raghavagps/algpred3.git
+git clone https://github.com/your-username/algpred3.git
 cd algpred3
 ```
 
-Download feature extraction binary:
+### 2. Install dependencies
 
 ```bash
-wget <pfeature_release_link>
-chmod +x pfeature_comp
+pip install pandas joblib
 ```
 
 ---
 
-### Option 2 — Manual Installation
-
-Install dependencies:
+## ▶️ Usage
 
 ```bash
-pip install pandas joblib scikit-learn
+python algpred3.py -i INPUT -j JOB [options]
 ```
 
-Ensure:
+### 🔹 Required Arguments
 
-* `pfeature_comp` executable is present
-* `columns.csv` file exists
-* Internet access for automatic model download
+| Argument | Description                      |
+| -------- | -------------------------------- |
+| `-i`     | Input file (FASTA or plain text) |
+| `-j`     | Job type: `pred`, `scan`, `des`  |
 
 ---
 
-## Usage Overview
+### 🔹 Optional Arguments
 
-General syntax:
-
-```bash
-python algpred3.py -i input.fasta -j <mode> -o output.csv
-```
-
-Modes available:
-
-* `pred` → Prediction mode
-* `scan` → Protein scanning
-* `des` → Mutation design
+| Argument | Default               | Description               |
+| -------- | --------------------- | ------------------------- |
+| `-o`     | final_predictions.csv | Output file               |
+| `-t`     | 0.5                   | Prediction threshold      |
+| `-l`     | —                     | Window length (scan mode) |
+| `-s`     | 1                     | Step size (scan mode)     |
 
 ---
 
-## Prediction Mode
+## 🧪 Modes Explained
 
-Predict allergenicity of sequences.
+### 🔍 1. Prediction Mode (`pred`)
+
+Predict allergenicity of full sequences:
 
 ```bash
-python algpred3.py -i peptides.fasta -j pred -o output.csv
+python algpred3.py -i input.fasta -j pred
 ```
 
-### Output Columns
+Output:
 
-Sequence_ID — Sequence identifier
-Probability — Prediction score
-Status — Allergen / Non-Allergen
+* Sequence ID
+* Probability score
+* Allergen / Non-Allergen
 
 ---
 
-## Scan Mode
+### 🧬 2. Scan Mode (`scan`)
 
-Sliding window allergenicity analysis across proteins.
+Perform sliding window analysis:
 
 ```bash
-python algpred3.py -i protein.fasta -j scan -l 15 -s 1 -o scan.csv
+python algpred3.py -i input.fasta -j scan -l 20 -s 5
 ```
 
-Arguments:
+Output:
 
--l → Window length (required)
--s → Step size (default: 1)
-
-### Output Columns
-
-ParentSeq — Protein ID
-Start / End — Window positions
-Peptide — Extracted fragment
-Score — Prediction probability
-Prediction — Allergen / Non-Allergen
+* Parent sequence
+* Start & end positions
+* Peptide fragment
+* Prediction
 
 ---
 
-## Design Mode
+### 🧪 3. Design Mode (`des`)
 
-Generates all possible single amino acid mutants and evaluates allergenicity.
+Generate all possible single-point mutants:
 
 ```bash
-python algpred3.py -i peptides.fasta -j des -o design.csv
+python algpred3.py -i input.fasta -j des
 ```
 
-### Output Columns
+Output:
 
-SeqID — Original sequence ID
-MutantID — Mutation annotation
-Sequence — Mutant sequence
-Score — Prediction probability
-Prediction — Allergen / Non-Allergen
+* Mutant ID
+* Modified sequence
+* Prediction score
 
 ---
 
-## Sequence Validation
+## 🧹 Input Handling
 
-Only standard amino acids allowed:
+* Accepts:
 
+  * FASTA format
+  * Plain text sequences
+* Automatically:
+
+  * Removes invalid amino acids
+  * Logs removed sequences in `stand_error.log`
+
+Valid amino acids:
+
+```
 ACDEFGHIKLMNPQRSTVWY
-
-Invalid sequences are:
-
-Automatically removed
-Logged in `stand_error.log`
-
-Clean FASTA files are generated before analysis.
+```
 
 ---
 
-## Machine Learning Model
+## 📊 Output
 
-Model type:
-Classification model (serialized Joblib format)
+All results are saved in **CSV format**, including:
 
-Feature source:
-pfeature sequence descriptors
-
-Model file:
-
-`algpred3_model.sav`
-Downloaded automatically if missing.
+* Prediction scores
+* Classification labels
+* Sequence metadata (depending on mode)
 
 ---
 
-## Repository Contents
+## 📦 Auto-Downloaded Dependencies
 
-algpred3.py — Main unified script
-algpred3_model.sav — Pretrained model (auto-download)
-pfeature_comp — Descriptor generator binary
-columns.csv — Selected feature columns
-README.md — Documentation
+The script automatically downloads:
 
----
-
-## Citation
-
-If you use AlgPred 3.0 in research, please cite the corresponding publication from:
-
-Raghava GPS Group, IIIT-Delhi.
+* Trained ML model
+* Feature extraction binary (`pfeature`)
+* Required feature column list
 
 ---
 
-## Support
+## ⚠️ Notes
 
-GitHub:
-https://github.com/raghavagps/algpred3
-
-Email:
-raghava@iiitd.ac.in
+* Ensure internet connection for first run (auto-downloads)
+* `scan` mode requires `-l` (window length)
+* Large sequences in `des` mode may generate **many mutants**
 
 ---
 
-## License
+## 🙏 Acknowledgment
 
-Academic and research use recommended.
-Refer to the repository license file for details.
+Developed by **Raghava Group**,
+Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)
+
+---
+
+## 💡 Example
+
+```bash
+python algpred3.py -i sample.fasta -j pred -t 0.6 -o results.csv
+```
