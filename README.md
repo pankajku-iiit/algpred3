@@ -1,200 +1,242 @@
-# 🧬 AlgPred 3.0
+# AlgPred3
 
-**Prediction of Allergenic and Non-Allergenic Peptides**
-Developed by Raghava Group, IIIT-Delhi
-
----
-
-## 📌 Overview
-
-AlgPred 3.0 is a command-line tool for predicting whether peptide sequences are **allergenic or non-allergenic** using a trained machine learning model.
-
-It supports three major modes:
-
-* 🔍 **Prediction (`pred`)** – Classify full sequences
-* 🧬 **Scan (`scan`)** – Sliding window analysis of proteins
-* 🧪 **Design (`des`)** – Generate and evaluate mutants
+A computational framework for predicting and designing **allergenic and non-allergenic peptides** using machine learning and composition-based features.
 
 ---
 
-## ⚙️ Features
+## 📌 Introduction
 
-* Automatic dependency download (model + binaries)
-* FASTA & plain text input support
-* Built-in sequence cleaning and validation
-* Multiple feature extraction techniques:
+**AlgPred3** is developed to identify allergenic potential of peptides and proteins based on their primary sequence. It integrates feature-based machine learning approaches with curated allergen datasets to provide robust predictions.
 
-  * AAC, DPC, BTC, DDR
-  * PAAC, APAAC, CeTD
-* Adjustable prediction threshold
-* CSV output for easy analysis
+The tool supports:
 
----
+* **Prediction of allergenic peptides**
+* **Protein scanning for allergenic regions**
+* **Design of peptide mutants**
 
-## 📂 Project Structure
+It uses compositional and physicochemical descriptors such as:
 
-```
-.
-├── algpred3.py
-├── algpred3_model.sav      # Auto-downloaded
-├── pfeature_comp           # Auto-downloaded
-├── columns.csv             # Auto-downloaded
-├── stand_error.log         # Invalid sequences log
-└── output files (.csv)
-```
+* AAC (Amino Acid Composition)
+* DPC (Dipeptide Composition)
+* PAAC, APAAC
+* CeTD, DDR, BTC
 
 ---
 
-## 🚀 Installation
+## 📚 Reference
 
-### 1. Clone the repository
+**AlgPred3**
+Raghava Group, IIIT-Delhi
+
+---
+
+## 🧪 Quick Start for Reproducibility
 
 ```bash
-git clone https://github.com/your-username/algpred3.git
+# 1. Clone the repository
+git clone https://github.com/raghavagps/algpred3.git
 cd algpred3
+
+# 2. Run help
+python algpred3.py -h
+
+# 3. Run prediction
+python algpred3.py -i example.fasta -o output.csv -j pred
 ```
 
-### 2. Install dependencies
+---
+
+## 🛠️ Installation Options
+
+### 🧰 Pip Installation
 
 ```bash
-pip install pandas joblib
+pip install algpred3
 ```
 
----
-
-## ▶️ Usage
+Check options:
 
 ```bash
-python algpred3.py -i INPUT -j JOB [options]
+algpred3 -h
 ```
 
-### 🔹 Required Arguments
-
-| Argument | Description                      |
-| -------- | -------------------------------- |
-| `-i`     | Input file (FASTA or plain text) |
-| `-j`     | Job type: `pred`, `scan`, `des`  |
-
 ---
 
-### 🔹 Optional Arguments
+### 🔹 Standalone Installation
 
-| Argument | Default               | Description               |
-| -------- | --------------------- | ------------------------- |
-| `-o`     | final_predictions.csv | Output file               |
-| `-t`     | 0.5                   | Prediction threshold      |
-| `-l`     | —                     | Window length (scan mode) |
-| `-s`     | 1                     | Step size (scan mode)     |
+AlgPred3 is written in **Python 3** and requires:
 
----
-
-## 🧪 Modes Explained
-
-### 🔍 1. Prediction Mode (`pred`)
-
-Predict allergenicity of full sequences:
+#### ✅ Required Libraries
 
 ```bash
-python algpred3.py -i input.fasta -j pred
+python=3.8+
 ```
 
-Output:
-
-* Sequence ID
-* Probability score
-* Allergen / Non-Allergen
-
----
-
-### 🧬 2. Scan Mode (`scan`)
-
-Perform sliding window analysis:
+#### 📦 Install Dependencies
 
 ```bash
-python algpred3.py -i input.fasta -j scan -l 20 -s 5
+pip install scikit-learn
+pip install pandas
+pip install joblib
 ```
-
-Output:
-
-* Parent sequence
-* Start & end positions
-* Peptide fragment
-* Prediction
 
 ---
 
-### 🧪 3. Design Mode (`des`)
+### 🔹 Automatic Dependency Setup
 
-Generate all possible single-point mutants:
+AlgPred3 automatically downloads required files during runtime:
+
+* Model file (`algpred3_model.sav`)
+* Feature column file (`columns.csv`)
+* pfeature binary
+
+This behavior is implemented directly in the script. 
+
+---
+
+## ⚠️ Important Notes
+
+* First run requires **internet connection** for auto-download.
+* Input sequences must contain only valid amino acids:
+  **ACDEFGHIKLMNPQRSTVWY**
+* Invalid sequences are removed and logged in:
 
 ```bash
-python algpred3.py -i input.fasta -j des
-```
-
-Output:
-
-* Mutant ID
-* Modified sequence
-* Prediction score
-
----
-
-## 🧹 Input Handling
-
-* Accepts:
-
-  * FASTA format
-  * Plain text sequences
-* Automatically:
-
-  * Removes invalid amino acids
-  * Logs removed sequences in `stand_error.log`
-
-Valid amino acids:
-
-```
-ACDEFGHIKLMNPQRSTVWY
+stand_error.log
 ```
 
 ---
 
-## 📊 Output
+## 🔬 Classification
 
-All results are saved in **CSV format**, including:
+AlgPred3 classifies peptides into:
 
-* Prediction scores
-* Classification labels
-* Sequence metadata (depending on mode)
+* **Allergen**
+* **Non-Allergen**
 
----
-
-## 📦 Auto-Downloaded Dependencies
-
-The script automatically downloads:
-
-* Trained ML model
-* Feature extraction binary (`pfeature`)
-* Required feature column list
+based on machine learning predictions using extracted sequence features.
 
 ---
 
-## ⚠️ Notes
+## 🚀 Usage
 
-* Ensure internet connection for first run (auto-downloads)
-* `scan` mode requires `-l` (window length)
-* Large sequences in `des` mode may generate **many mutants**
-
----
-
-## 🙏 Acknowledgment
-
-Developed by **Raghava Group**,
-Indraprastha Institute of Information Technology, Delhi (IIIT-Delhi)
-
----
-
-## 💡 Example
+### 🔹 Minimum Usage
 
 ```bash
-python algpred3.py -i sample.fasta -j pred -t 0.6 -o results.csv
+python algpred3.py -h
 ```
+
+---
+
+### 🔹 Full Usage
+
+```bash
+usage: algpred3.py [-h]
+                  -i INPUT
+                  [-o OUTPUT]
+                  -j {pred,scan,des}
+                  [-t THRESHOLD]
+                  [-l LENGTH]
+                  [-s STEP]
+```
+
+---
+
+### 📌 Arguments
+
+| Argument    | Description                                        |
+| ----------- | -------------------------------------------------- |
+| `-i INPUT`  | Input FASTA or sequence file                       |
+| `-o OUTPUT` | Output CSV file (default: `final_predictions.csv`) |
+| `-j`        | Job type: `pred`, `scan`, `des`                    |
+| `-t`        | Threshold (default: 0.5)                           |
+| `-l`        | Window length (scan mode only)                     |
+| `-s`        | Step size (default: 1)                             |
+
+---
+
+## 📂 Input & Output Files
+
+### ✅ Input Formats
+
+1. **FASTA format**
+2. **Plain text format** (one sequence per line)
+
+---
+
+### ✅ Output File
+
+* Results are saved in **CSV format**
+* Includes:
+
+  * Sequence ID
+  * Prediction score
+  * Allergen / Non-Allergen status
+
+---
+
+## 🔍 Jobs & Features
+
+### 🔹 Job Types
+
+| Job         | Description                                |
+| ----------- | ------------------------------------------ |
+| 🔹 **pred** | Predict allergenic potential of sequences  |
+| 🔹 **scan** | Identify allergenic regions in proteins    |
+| 🔹 **des**  | Generate and evaluate all possible mutants |
+
+---
+
+### 🔹 Scan Mode
+
+* Uses **sliding window approach**
+* Generates peptide fragments
+* Predicts allergenic regions
+
+---
+
+### 🔹 Design Mode
+
+* Generates **all single amino acid mutants**
+* Predicts allergenicity of each mutant
+* Useful for:
+
+  * Peptide optimization
+  * Allergenicity reduction
+
+---
+
+## ⚙️ Workflow
+
+1. Input sequence validation
+2. Cleaning invalid sequences
+3. Feature extraction (pfeature)
+4. Feature selection
+5. Model prediction
+6. Output generation
+
+---
+
+## 📑 Package Contents
+
+| File                   | Description               |
+| ---------------------- | ------------------------- |
+| **algpred3.py**        | Main prediction script    |
+| **columns.csv**        | Feature selection file    |
+| **algpred3_model.sav** | Trained ML model          |
+| **pfeature_comp**      | Feature extraction binary |
+| **example.fasta**      | Sample input              |
+
+---
+
+## 📦 PIP Installation (Again for Reference)
+
+```bash
+pip install algpred3
+```
+
+---
+
+🚀 **Start predicting allergenic peptides with AlgPred3 today!**
+
+---
