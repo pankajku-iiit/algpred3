@@ -8,6 +8,7 @@ A computational framework for predicting and designing **allergenic and non-alle
 
 **AlgPred3** is developed to identify allergenic potential of peptides and proteins based on their primary sequence. It integrates feature-based machine learning approaches with curated allergen datasets to provide robust predictions.
 🔗 Visit the web server for more information: [Algpred3](https://webs.iiitd.edu.in/raghava/algpred3/)
+
 The tool supports:
 
 * **Prediction of allergenic peptides**
