@@ -1,0 +1,106 @@
+# 🛠️ Installation Guide for AlgPred3
+
+## 🔹 PIP Installation (Recommended)
+
+To install AlgPred3 via PIP, run:
+
+```bash
+pip install algpred3
+```
+
+To check available options:
+
+```bash
+algpred3 -h
+```
+
+---
+
+## 🔹 Standalone Installation
+
+AlgPred3 is implemented in **Python 3** and requires the following dependencies:
+
+### ✅ Required Libraries
+
+```bash
+python=3.8+
+```
+
+### 📦 Install Required Packages
+
+```bash
+pip install scikit-learn
+pip install pandas
+pip install joblib
+```
+
+---
+
+## 🔹 External Dependency (Important)
+
+AlgPred3 requires the **pfeature tool** for feature extraction.
+
+👉 This is **automatically downloaded** when you run the script for the first time.
+
+However, if you want to install manually:
+
+* Download from:
+  [https://github.com/pankajku-iiit/algpred3/releases](https://github.com/pankajku-iiit/algpred3/releases)
+
+* Make it executable:
+
+```bash
+chmod +x pfeature_comp
+```
+
+---
+
+## 🔹 Model & Feature Files
+
+The following files are required:
+
+* `algpred3_model.sav` (trained ML model)
+* `columns.csv` (feature selection file)
+
+👉 These files are **automatically downloaded** by the script if not present. 
+
+---
+
+## 🔹 Installation using environment.yml (Optional)
+
+1. Create environment:
+
+```bash
+conda env create -f environment.yml
+```
+
+2. Activate environment:
+
+```bash
+conda activate algpred3
+```
+
+---
+
+## ⚠️ Important Notes
+
+* Internet connection is required for **first-time setup** (auto-download of model & dependencies).
+* Input sequences must contain only **standard amino acids (ACDEFGHIKLMNPQRSTVWY)**.
+* Invalid sequences are automatically removed and logged in:
+
+```bash
+stand_error.log
+```
+
+---
+
+## 🚀 You're Ready!
+
+Run a quick test:
+
+```bash
+python algpred3.py -i sample.fasta -j pred
+```
+
+---
+
