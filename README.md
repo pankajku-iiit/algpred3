@@ -7,7 +7,7 @@ A computational framework for predicting and designing **allergenic and non-alle
 ## 📌 Introduction
 
 **AlgPred3** is developed to identify allergenic potential of peptides and proteins based on their primary sequence. It integrates feature-based machine learning approaches with curated allergen datasets to provide robust predictions.
-
+🔗 Visit the web server for more information: [Algpred3](https://webs.iiitd.edu.in/raghava/algpred3/)
 The tool supports:
 
 * **Prediction of allergenic peptides**
@@ -36,11 +36,14 @@ Raghava Group, IIIT-Delhi
 # 1. Clone the repository
 git clone https://github.com/raghavagps/algpred3.git
 cd algpred3
+# 2. Set up the environment (conda recommended)
+conda env create -f environment.yml
+conda activate algpred3
 
-# 2. Run help
+# 3. Run help
 python algpred3.py -h
 
-# 3. Run prediction
+# 4. Run prediction
 python algpred3.py -i example.fasta -o output.csv -j pred
 ```
 
@@ -238,5 +241,5 @@ pip install algpred3
 ---
 
 🚀 **Start predicting allergenic peptides with AlgPred3 today!**
-
+🔗 Visit: [Algpred3](https://webs.iiitd.edu.in/raghava/algpred3/)
 ---
